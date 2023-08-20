@@ -2,6 +2,11 @@ package faketime
 
 import "fmt"
 
+type TimeInterface interface {
+	GetTime() string
+	IncreaseTime(int)
+}
+
 type Time struct {
 	Hour   int
 	Minute int
