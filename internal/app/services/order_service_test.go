@@ -30,10 +30,10 @@ func Test_CreateOrder(t *testing.T) {
 		mockCtrl.Finish()
 		mockRepository := repositories.NewMockOrderRepositoryI(mockCtrl)
 		mockFakeTime := faketime.NewMockTimeInterface(mockCtrl)
-		mockOrderService := NewMockProductServiceI(mockCtrl)
-		ps := NewOrderService(mockFakeTime, mockOrderService, mockRepository)
+		mockProductService := NewMockProductServiceI(mockCtrl)
+		ps := NewOrderService(mockFakeTime, mockProductService, mockRepository)
 
-		mockOrderService.EXPECT().
+		mockProductService.EXPECT().
 			GetProductPriceByProductCode(gomock.Any()).
 			Return(nil, errors.New("fake error")).
 			Times(1)
@@ -49,15 +49,15 @@ func Test_CreateOrder(t *testing.T) {
 		mockCtrl.Finish()
 		mockRepository := repositories.NewMockOrderRepositoryI(mockCtrl)
 		mockFakeTime := faketime.NewMockTimeInterface(mockCtrl)
-		mockOrderService := NewMockProductServiceI(mockCtrl)
-		ps := NewOrderService(mockFakeTime, mockOrderService, mockRepository)
+		mockProductService := NewMockProductServiceI(mockCtrl)
+		ps := NewOrderService(mockFakeTime, mockProductService, mockRepository)
 
-		mockOrderService.EXPECT().
+		mockProductService.EXPECT().
 			GetProductPriceByProductCode(gomock.Any()).
 			Return(&fakeProductPrice, nil).
 			Times(1)
 
-		mockOrderService.EXPECT().
+		mockProductService.EXPECT().
 			GetProductStockByProductName(gomock.Any()).
 			Return(nil, errors.New("fake error")).
 			Times(1)
@@ -73,20 +73,20 @@ func Test_CreateOrder(t *testing.T) {
 		mockCtrl.Finish()
 		mockRepository := repositories.NewMockOrderRepositoryI(mockCtrl)
 		mockFakeTime := faketime.NewMockTimeInterface(mockCtrl)
-		mockOrderService := NewMockProductServiceI(mockCtrl)
-		ps := NewOrderService(mockFakeTime, mockOrderService, mockRepository)
+		mockProductService := NewMockProductServiceI(mockCtrl)
+		ps := NewOrderService(mockFakeTime, mockProductService, mockRepository)
 
-		mockOrderService.EXPECT().
+		mockProductService.EXPECT().
 			GetProductPriceByProductCode(gomock.Any()).
 			Return(&fakeProductPrice, nil).
 			Times(1)
 
-		mockOrderService.EXPECT().
+		mockProductService.EXPECT().
 			GetProductStockByProductName(gomock.Any()).
 			Return(&fakeProductStock, nil).
 			Times(1)
 
-		mockOrderService.EXPECT().
+		mockProductService.EXPECT().
 			UpdateProductStockByProductName(gomock.Any()).
 			Return(errors.New("fake error")).
 			Times(1)
@@ -102,20 +102,20 @@ func Test_CreateOrder(t *testing.T) {
 		mockCtrl.Finish()
 		mockRepository := repositories.NewMockOrderRepositoryI(mockCtrl)
 		mockFakeTime := faketime.NewMockTimeInterface(mockCtrl)
-		mockOrderService := NewMockProductServiceI(mockCtrl)
-		ps := NewOrderService(mockFakeTime, mockOrderService, mockRepository)
+		mockProductService := NewMockProductServiceI(mockCtrl)
+		ps := NewOrderService(mockFakeTime, mockProductService, mockRepository)
 
-		mockOrderService.EXPECT().
+		mockProductService.EXPECT().
 			GetProductPriceByProductCode(gomock.Any()).
 			Return(&fakeProductPrice, nil).
 			Times(1)
 
-		mockOrderService.EXPECT().
+		mockProductService.EXPECT().
 			GetProductStockByProductName(gomock.Any()).
 			Return(&fakeProductStock, nil).
 			Times(1)
 
-		mockOrderService.EXPECT().
+		mockProductService.EXPECT().
 			UpdateProductStockByProductName(gomock.Any()).
 			Return(nil).
 			Times(1)
@@ -136,20 +136,20 @@ func Test_CreateOrder(t *testing.T) {
 		mockCtrl.Finish()
 		mockRepository := repositories.NewMockOrderRepositoryI(mockCtrl)
 		mockFakeTime := faketime.NewMockTimeInterface(mockCtrl)
-		mockOrderService := NewMockProductServiceI(mockCtrl)
-		ps := NewOrderService(mockFakeTime, mockOrderService, mockRepository)
+		mockProductService := NewMockProductServiceI(mockCtrl)
+		ps := NewOrderService(mockFakeTime, mockProductService, mockRepository)
 
-		mockOrderService.EXPECT().
+		mockProductService.EXPECT().
 			GetProductPriceByProductCode(gomock.Any()).
 			Return(&fakeProductPrice, nil).
 			Times(1)
 
-		mockOrderService.EXPECT().
+		mockProductService.EXPECT().
 			GetProductStockByProductName(gomock.Any()).
 			Return(&fakeProductStock, nil).
 			Times(1)
 
-		mockOrderService.EXPECT().
+		mockProductService.EXPECT().
 			UpdateProductStockByProductName(gomock.Any()).
 			Return(nil).
 			Times(1)

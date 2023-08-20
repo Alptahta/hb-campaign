@@ -35,7 +35,7 @@ func (m *MockCampaignRepositoryI) EXPECT() *MockCampaignRepositoryIMockRecorder 
 }
 
 // CreateCampaign mocks base method.
-func (m *MockCampaignRepositoryI) CreateCampaign(cc models.CreateCampaign) (int64, error) {
+func (m *MockCampaignRepositoryI) CreateCampaign(cc models.CreateCampaignDTO) (int64, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateCampaign", cc)
 	ret0, _ := ret[0].(int64)
@@ -47,6 +47,21 @@ func (m *MockCampaignRepositoryI) CreateCampaign(cc models.CreateCampaign) (int6
 func (mr *MockCampaignRepositoryIMockRecorder) CreateCampaign(cc interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateCampaign", reflect.TypeOf((*MockCampaignRepositoryI)(nil).CreateCampaign), cc)
+}
+
+// GetAllCampaignsWithFinishTimes mocks base method.
+func (m *MockCampaignRepositoryI) GetAllCampaignsWithFinishTimes() ([]models.CampaignWithFinishTime, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAllCampaignsWithFinishTimes")
+	ret0, _ := ret[0].([]models.CampaignWithFinishTime)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAllCampaignsWithFinishTimes indicates an expected call of GetAllCampaignsWithFinishTimes.
+func (mr *MockCampaignRepositoryIMockRecorder) GetAllCampaignsWithFinishTimes() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllCampaignsWithFinishTimes", reflect.TypeOf((*MockCampaignRepositoryI)(nil).GetAllCampaignsWithFinishTimes))
 }
 
 // GetCampaignByName mocks base method.
@@ -62,4 +77,18 @@ func (m *MockCampaignRepositoryI) GetCampaignByName(campaignCode string) (models
 func (mr *MockCampaignRepositoryIMockRecorder) GetCampaignByName(campaignCode interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCampaignByName", reflect.TypeOf((*MockCampaignRepositoryI)(nil).GetCampaignByName), campaignCode)
+}
+
+// UpdateStatusByCampaignName mocks base method.
+func (m *MockCampaignRepositoryI) UpdateStatusByCampaignName(campaignName, status string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateStatusByCampaignName", campaignName, status)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdateStatusByCampaignName indicates an expected call of UpdateStatusByCampaignName.
+func (mr *MockCampaignRepositoryIMockRecorder) UpdateStatusByCampaignName(campaignName, status interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateStatusByCampaignName", reflect.TypeOf((*MockCampaignRepositoryI)(nil).UpdateStatusByCampaignName), campaignName, status)
 }

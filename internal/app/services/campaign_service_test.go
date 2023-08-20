@@ -13,7 +13,7 @@ import (
 var (
 	createdCampaignID int64 = 1
 
-	mockDataCreateCampign = models.CreateCampaign{
+	mockDataCreateCampign = models.CreateCampaignRequest{
 		Name:                   "C1",
 		ProductCode:            "P1",
 		Duration:               1,
@@ -30,6 +30,9 @@ var (
 		Duration:               1,
 		PriceManipulationLimit: 1,
 		TargetSalesCount:       1,
+		StartedAt:              "01:00",
+		FinishedAt:             "02:00",
+		Status:                 "Active",
 	}
 )
 
@@ -39,14 +42,16 @@ func Test_CreateCampaign(t *testing.T) {
 		mockCtrl.Finish()
 		mockRepository := repositories.NewMockCampaignRepositoryI(mockCtrl)
 		mockFakeTime := faketime.NewMockTimeInterface(mockCtrl)
-		ps := NewCampaignService(mockFakeTime, mockRepository)
+		cs := NewCampaignService(mockFakeTime, mockRepository)
+
+		mockFakeTime.EXPECT().GetTime().Return("01:00").Times(1)
 
 		mockRepository.EXPECT().
 			CreateCampaign(gomock.Any()).
 			Return(createdCampaignID, errors.New("fake error")).
 			Times(1)
 
-		err := ps.CreateCampaign(mockDataCreateCampign)
+		err := cs.CreateCampaign(mockDataCreateCampign)
 		if err == nil {
 			t.Fatalf("expected error but had no error")
 		}
@@ -57,14 +62,15 @@ func Test_CreateCampaign(t *testing.T) {
 		mockCtrl.Finish()
 		mockRepository := repositories.NewMockCampaignRepositoryI(mockCtrl)
 		mockFakeTime := faketime.NewMockTimeInterface(mockCtrl)
-		ps := NewCampaignService(mockFakeTime, mockRepository)
+		cs := NewCampaignService(mockFakeTime, mockRepository)
 
+		mockFakeTime.EXPECT().GetTime().Return("01:00").Times(1)
 		mockRepository.EXPECT().
 			CreateCampaign(gomock.Any()).
 			Return(createdCampaignID, nil).
 			Times(1)
 
-		err := ps.CreateCampaign(mockDataCreateCampign)
+		err := cs.CreateCampaign(mockDataCreateCampign)
 		if err != nil {
 			t.Fatalf("did not expect any error but got %v", err)
 		}
@@ -77,14 +83,14 @@ func Test_GetCampaignByName(t *testing.T) {
 		mockCtrl.Finish()
 		mockRepository := repositories.NewMockCampaignRepositoryI(mockCtrl)
 		mockFakeTime := faketime.NewMockTimeInterface(mockCtrl)
-		ps := NewCampaignService(mockFakeTime, mockRepository)
+		cs := NewCampaignService(mockFakeTime, mockRepository)
 
 		mockRepository.EXPECT().
 			GetCampaignByName(gomock.Any()).
 			Return(mockCampaign, errors.New("fake error")).
 			Times(1)
 
-		campaign, err := ps.GetCampaignByName(mockCampaignName)
+		campaign, err := cs.GetCampaignByName(mockCampaignName)
 		if err == nil {
 			t.Fatalf("expected error but had no error")
 		}
@@ -98,14 +104,14 @@ func Test_GetCampaignByName(t *testing.T) {
 		mockCtrl.Finish()
 		mockRepository := repositories.NewMockCampaignRepositoryI(mockCtrl)
 		mockFakeTime := faketime.NewMockTimeInterface(mockCtrl)
-		ps := NewCampaignService(mockFakeTime, mockRepository)
+		cs := NewCampaignService(mockFakeTime, mockRepository)
 
 		mockRepository.EXPECT().
 			GetCampaignByName(gomock.Any()).
 			Return(mockCampaign, nil).
 			Times(1)
 
-		campaign, err := ps.GetCampaignByName(mockCampaignName)
+		campaign, err := cs.GetCampaignByName(mockCampaignName)
 		if err != nil {
 			t.Fatalf("did not expect any error but got %v", err)
 		}

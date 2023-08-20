@@ -58,3 +58,27 @@ func (mr *MockTimeInterfaceMockRecorder) IncreaseTime(arg0 interface{}) *gomock.
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IncreaseTime", reflect.TypeOf((*MockTimeInterface)(nil).IncreaseTime), arg0)
 }
+
+// NotifyAll mocks base method.
+func (m *MockTimeInterface) NotifyAll() {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "NotifyAll")
+}
+
+// NotifyAll indicates an expected call of NotifyAll.
+func (mr *MockTimeInterfaceMockRecorder) NotifyAll() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "NotifyAll", reflect.TypeOf((*MockTimeInterface)(nil).NotifyAll))
+}
+
+// Register mocks base method.
+func (m *MockTimeInterface) Register(o Observer) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "Register", o)
+}
+
+// Register indicates an expected call of Register.
+func (mr *MockTimeInterfaceMockRecorder) Register(o interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Register", reflect.TypeOf((*MockTimeInterface)(nil).Register), o)
+}

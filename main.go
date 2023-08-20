@@ -52,6 +52,8 @@ func main() {
 	cs := services.NewCampaignService(&ft, cr)
 	os := services.NewOrderService(&ft, ps, or)
 
+	ft.Register(cs)
+
 	// Handmade Multiplexer
 	for _, v1 := range fileLines {
 		ss := strings.Split(v1, " ")
@@ -103,7 +105,7 @@ func main() {
 			if err != nil {
 				log.Println(err)
 			}
-			err = cs.CreateCampaign(models.CreateCampaign{
+			err = cs.CreateCampaign(models.CreateCampaignRequest{
 				Name:                   name,
 				ProductCode:            productCode,
 				Duration:               duration,
@@ -126,7 +128,7 @@ func main() {
 			}
 			// TODO status from DB or observer?
 			// status, total sales, Turnover, Average Item Price from DB or observer?
-			log.Printf("Campaign %s info; Status %s, Target Sales %d, Total Sales %d, Turnover %d, Average Item Price %f", campaign.Name, "", campaign.TargetSalesCount, 0, 0, 0.0)
+			log.Printf("Campaign %s info; Status %s, Target Sales %d, Total Sales %d, Turnover %d, Average Item Price %f", campaign.Name, campaign.Status, campaign.TargetSalesCount, 0, 0, 0.0)
 		}
 		// Create Order
 		if ss[0] == "create_order" {
@@ -143,6 +145,16 @@ func main() {
 				log.Println(err)
 				continue
 			}
+			log.Printf("Order created; product %s, quantity %d", productCode, quantity)
+		}
+		// Increase Time
+		if ss[0] == "increase_time" {
+			increaseAmount, err := strconv.Atoi(ss[1])
+			if err != nil {
+				log.Println(err)
+			}
+			ft.IncreaseTime(increaseAmount)
+			log.Printf("Time is %s", ft.GetTime())
 		}
 	}
 }

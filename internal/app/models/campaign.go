@@ -7,12 +7,32 @@ type Campaign struct {
 	Duration               int
 	PriceManipulationLimit int
 	TargetSalesCount       int
+	StartedAt              string
+	FinishedAt             string
+	Status                 string
 }
 
-type CreateCampaign struct {
+type CreateCampaignRequest struct {
 	Name                   string
 	ProductCode            string
 	Duration               int
 	PriceManipulationLimit int
 	TargetSalesCount       int
+}
+
+type CreateCampaignDTO struct {
+	Name                   string
+	ProductCode            string
+	Duration               int
+	PriceManipulationLimit int
+	TargetSalesCount       int
+	StartedAt              string
+	FinishedAt             string
+	Status                 string
+}
+
+type CampaignWithFinishTime struct {
+	ID         int64
+	Name       string
+	FinishedAt string
 }

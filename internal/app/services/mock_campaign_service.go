@@ -35,7 +35,7 @@ func (m *MockCampaignServiceI) EXPECT() *MockCampaignServiceIMockRecorder {
 }
 
 // CreateCampaign mocks base method.
-func (m *MockCampaignServiceI) CreateCampaign(cp models.CreateCampaign) error {
+func (m *MockCampaignServiceI) CreateCampaign(cp models.CreateCampaignRequest) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateCampaign", cp)
 	ret0, _ := ret[0].(error)
@@ -61,4 +61,18 @@ func (m *MockCampaignServiceI) GetCampaignByName(CampaignCode string) (*models.C
 func (mr *MockCampaignServiceIMockRecorder) GetCampaignByName(CampaignCode interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCampaignByName", reflect.TypeOf((*MockCampaignServiceI)(nil).GetCampaignByName), CampaignCode)
+}
+
+// Update mocks base method.
+func (m *MockCampaignServiceI) Update() error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Update")
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Update indicates an expected call of Update.
+func (mr *MockCampaignServiceIMockRecorder) Update() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockCampaignServiceI)(nil).Update))
 }

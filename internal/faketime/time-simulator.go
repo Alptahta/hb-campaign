@@ -5,11 +5,14 @@ import "fmt"
 type TimeInterface interface {
 	GetTime() string
 	IncreaseTime(int)
+	NotifyAll()
+	Register(o Observer)
 }
 
 type Time struct {
-	Hour   int
-	Minute int
+	Hour         int
+	Minute       int
+	observerList []Observer
 }
 
 func NewTime() Time {
@@ -22,4 +25,15 @@ func (t *Time) GetTime() string {
 
 func (t *Time) IncreaseTime(h int) {
 	t.Hour = t.Hour + h
+	t.NotifyAll()
+}
+
+func (t *Time) Register(o Observer) {
+	t.observerList = append(t.observerList, o)
+}
+
+func (t *Time) NotifyAll() {
+	for _, observer := range t.observerList {
+		observer.Update()
+	}
 }
