@@ -11,6 +11,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/go-sql-driver/mysql"
 )
@@ -21,10 +22,11 @@ func main() {
 		User:   "root",
 		Passwd: "12345",
 		Net:    "tcp",
-		Addr:   "127.0.0.1:3306",
+		Addr:   "db:3306",
 		DBName: "hb",
 	}
 	// Get a database handle.
+	time.Sleep(20 * time.Second)
 	db, err := sql.Open("mysql", cfg.FormatDSN())
 	if err != nil {
 		log.Fatal(err)

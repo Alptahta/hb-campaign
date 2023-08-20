@@ -35,3 +35,6 @@ purge:
 	docker rm hbCont
 	docker image rm hb-campaign:trial
 
+run-docker:
+	docker compose up
+

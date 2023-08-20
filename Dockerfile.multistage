@@ -8,10 +8,9 @@ WORKDIR /app
 # Copy the source code.
 COPY . ./
 RUN go mod download
-RUN go mod tidy
 
 # Build
-RUN CGO_ENABLED=0 GOOS=linux go build -o /hb-campaign
+RUN CGO_ENABLED=0 GOOS=linux go build -o /hb
 
 # Run the tests in the container
 FROM build-stage AS run-test-stage
@@ -22,9 +21,11 @@ FROM gcr.io/distroless/base-debian11 AS build-release-stage
 
 WORKDIR /
 
-COPY --from=build-stage /hb-campaign /hb-campaign
-COPY --from=build-stage /commands.txt /commands.txt
+COPY --from=build-stage /hb /hb
+#COPY --from=build-stage ./commands.txt ./commands.txt
+
+EXPOSE 8080
 
 USER nonroot:nonroot
 
-ENTRYPOINT ["/hb-campaign"]
+ENTRYPOINT ["/hb"]

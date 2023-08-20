@@ -11,21 +11,19 @@ services:
     hostname: hb-campaign
     networks:
       - mynet
-    deploy:
-      restart_policy:
-        condition: on-failure
   mysql:
     build:
       context: .
       dockerfile: Dockerfile.mysql
     container_name: mysqlCont
     hostname: db
+    environment:
+      - MYSQL_ROOT_PASSWORD=12345
     networks:
       - mynet
     ports:
       - 3306:3306
       - 8080:8080
-
 networks:
   mynet:
     driver: bridge
