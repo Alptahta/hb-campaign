@@ -24,6 +24,7 @@ CREATE TABLE campaigns (
     price_manipulation_limit int NOT NULL,
     target_sales_count int NOT NULL,
     PRIMARY KEY (id),
+    UNIQUE (name),
     FOREIGN KEY (product_code) REFERENCES products(product_code)
 );
 
