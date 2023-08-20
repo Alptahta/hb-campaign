@@ -42,7 +42,8 @@ func Test_CreateCampaign(t *testing.T) {
 		mockCtrl.Finish()
 		mockRepository := repositories.NewMockCampaignRepositoryI(mockCtrl)
 		mockFakeTime := faketime.NewMockTimeInterface(mockCtrl)
-		cs := NewCampaignService(mockFakeTime, mockRepository)
+		mockProductService := NewMockProductServiceI(mockCtrl)
+		cs := NewCampaignService(mockFakeTime, mockRepository, mockProductService)
 
 		mockFakeTime.EXPECT().GetTime().Return("01:00").Times(1)
 
@@ -62,7 +63,8 @@ func Test_CreateCampaign(t *testing.T) {
 		mockCtrl.Finish()
 		mockRepository := repositories.NewMockCampaignRepositoryI(mockCtrl)
 		mockFakeTime := faketime.NewMockTimeInterface(mockCtrl)
-		cs := NewCampaignService(mockFakeTime, mockRepository)
+		mockProductService := NewMockProductServiceI(mockCtrl)
+		cs := NewCampaignService(mockFakeTime, mockRepository, mockProductService)
 
 		mockFakeTime.EXPECT().GetTime().Return("01:00").Times(1)
 		mockRepository.EXPECT().
@@ -83,7 +85,8 @@ func Test_GetCampaignByName(t *testing.T) {
 		mockCtrl.Finish()
 		mockRepository := repositories.NewMockCampaignRepositoryI(mockCtrl)
 		mockFakeTime := faketime.NewMockTimeInterface(mockCtrl)
-		cs := NewCampaignService(mockFakeTime, mockRepository)
+		mockProductService := NewMockProductServiceI(mockCtrl)
+		cs := NewCampaignService(mockFakeTime, mockRepository, mockProductService)
 
 		mockRepository.EXPECT().
 			GetCampaignByName(gomock.Any()).
@@ -104,7 +107,8 @@ func Test_GetCampaignByName(t *testing.T) {
 		mockCtrl.Finish()
 		mockRepository := repositories.NewMockCampaignRepositoryI(mockCtrl)
 		mockFakeTime := faketime.NewMockTimeInterface(mockCtrl)
-		cs := NewCampaignService(mockFakeTime, mockRepository)
+		mockProductService := NewMockProductServiceI(mockCtrl)
+		cs := NewCampaignService(mockFakeTime, mockRepository, mockProductService)
 
 		mockRepository.EXPECT().
 			GetCampaignByName(gomock.Any()).

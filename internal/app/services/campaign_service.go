@@ -19,12 +19,14 @@ type CampaignServiceI interface {
 type CampaignService struct {
 	t  faketime.TimeInterface
 	cr repositories.CampaignRepositoryI
+	ps ProductServiceI
 }
 
-func NewCampaignService(t faketime.TimeInterface, cr repositories.CampaignRepositoryI) *CampaignService {
+func NewCampaignService(t faketime.TimeInterface, cr repositories.CampaignRepositoryI, ps ProductServiceI) *CampaignService {
 	return &CampaignService{
 		t:  t,
 		cr: cr,
+		ps: ps,
 	}
 }
 
@@ -103,6 +105,36 @@ func (cs CampaignService) Update() error {
 			if err != nil {
 				return err
 			}
+		}
+	}
+
+	activeCampaigns, err := cs.GetAllActiveCampaigns()
+	if err != nil {
+		return err
+	}
+	for _, campaign := range activeCampaigns {
+		price, err := cs.ps.GetProductPriceByProductCode(campaign.ProductCode)
+		if err != nil {
+			return err
+		}
+		err = cs.ps.UpdateProductPriceByProductCode(campaign.ProductCode, price.Price-float64(10))
+		if err != nil {
+			return err
+		}
+	}
+
+	finishedCampaigns, err := cs.GetAllEndedCampaigns()
+	if err != nil {
+		return err
+	}
+	for _, campaign := range finishedCampaigns {
+		price, err := cs.ps.GetProductInitialPriceByProductCode(campaign.ProductCode)
+		if err != nil {
+			return err
+		}
+		err = cs.ps.UpdateProductPriceByProductCode(campaign.ProductCode, price.Price)
+		if err != nil {
+			return err
 		}
 	}
 	return nil

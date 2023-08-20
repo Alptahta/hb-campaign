@@ -63,6 +63,21 @@ func (mr *MockProductServiceIMockRecorder) GetProductByProductCode(arg0 interfac
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetProductByProductCode", reflect.TypeOf((*MockProductServiceI)(nil).GetProductByProductCode), arg0)
 }
 
+// GetProductInitialPriceByProductCode mocks base method.
+func (m *MockProductServiceI) GetProductInitialPriceByProductCode(productCode string) (*models.ProductPrice, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetProductInitialPriceByProductCode", productCode)
+	ret0, _ := ret[0].(*models.ProductPrice)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetProductInitialPriceByProductCode indicates an expected call of GetProductInitialPriceByProductCode.
+func (mr *MockProductServiceIMockRecorder) GetProductInitialPriceByProductCode(productCode interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetProductInitialPriceByProductCode", reflect.TypeOf((*MockProductServiceI)(nil).GetProductInitialPriceByProductCode), productCode)
+}
+
 // GetProductPriceByProductCode mocks base method.
 func (m *MockProductServiceI) GetProductPriceByProductCode(productCode string) (*models.ProductPrice, error) {
 	m.ctrl.T.Helper()
@@ -93,18 +108,18 @@ func (mr *MockProductServiceIMockRecorder) GetProductStockByProductName(productC
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetProductStockByProductName", reflect.TypeOf((*MockProductServiceI)(nil).GetProductStockByProductName), productCode)
 }
 
-// Update mocks base method.
-func (m *MockProductServiceI) Update() error {
+// UpdateProductPriceByProductCode mocks base method.
+func (m *MockProductServiceI) UpdateProductPriceByProductCode(productCode string, newPrice float64) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Update")
+	ret := m.ctrl.Call(m, "UpdateProductPriceByProductCode", productCode, newPrice)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// Update indicates an expected call of Update.
-func (mr *MockProductServiceIMockRecorder) Update() *gomock.Call {
+// UpdateProductPriceByProductCode indicates an expected call of UpdateProductPriceByProductCode.
+func (mr *MockProductServiceIMockRecorder) UpdateProductPriceByProductCode(productCode, newPrice interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockProductServiceI)(nil).Update))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateProductPriceByProductCode", reflect.TypeOf((*MockProductServiceI)(nil).UpdateProductPriceByProductCode), productCode, newPrice)
 }
 
 // UpdateProductStockByProductName mocks base method.

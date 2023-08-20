@@ -55,17 +55,17 @@
 			<div id="nav">
 				<select id="files">
 				
-				<option value="file0">hb-campaign/internal/app/services/campaign_service.go (34.1%)</option>
+				<option value="file0">hb-campaign/internal/app/services/campaign_service.go (23.0%)</option>
 				
-				<option value="file1">hb-campaign/internal/app/services/mock_campaign_service.go (8.1%)</option>
+				<option value="file1">hb-campaign/internal/app/services/mock_campaign_service.go (0.0%)</option>
 				
 				<option value="file2">hb-campaign/internal/app/services/mock_order_service.go (0.0%)</option>
 				
-				<option value="file3">hb-campaign/internal/app/services/mock_product_service.go (55.8%)</option>
+				<option value="file3">hb-campaign/internal/app/services/mock_product_service.go (48.0%)</option>
 				
 				<option value="file4">hb-campaign/internal/app/services/order_service.go (100.0%)</option>
 				
-				<option value="file5">hb-campaign/internal/app/services/product_service.go (50.0%)</option>
+				<option value="file5">hb-campaign/internal/app/services/product_service.go (72.4%)</option>
 				
 				<option value="file6">hb-campaign/internal/faketime/mock_time-simulator.go (0.0%)</option>
 				
@@ -104,12 +104,14 @@ type CampaignServiceI interface {
 type CampaignService struct {
         t  faketime.TimeInterface
         cr repositories.CampaignRepositoryI
+        ps ProductServiceI
 }
 
-func NewCampaignService(t faketime.TimeInterface, cr repositories.CampaignRepositoryI) *CampaignService <span class="cov8" title="1">{
+func NewCampaignService(t faketime.TimeInterface, cr repositories.CampaignRepositoryI, ps ProductServiceI) *CampaignService <span class="cov8" title="1">{
         return &amp;CampaignService{
                 t:  t,
                 cr: cr,
+                ps: ps,
         }
 }</span>
 
@@ -190,6 +192,36 @@ func (cs CampaignService) Update() error <span class="cov0" title="0">{
                         }</span>
                 }
         }
+
+        <span class="cov0" title="0">activeCampaigns, err := cs.GetAllActiveCampaigns()
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov0" title="0">for _, campaign := range activeCampaigns </span><span class="cov0" title="0">{
+                price, err := cs.ps.GetProductPriceByProductCode(campaign.ProductCode)
+                if err != nil </span><span class="cov0" title="0">{
+                        return err
+                }</span>
+                <span class="cov0" title="0">err = cs.ps.UpdateProductPriceByProductCode(campaign.ProductCode, price.Price-float64(10))
+                if err != nil </span><span class="cov0" title="0">{
+                        return err
+                }</span>
+        }
+
+        <span class="cov0" title="0">finishedCampaigns, err := cs.GetAllEndedCampaigns()
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov0" title="0">for _, campaign := range finishedCampaigns </span><span class="cov0" title="0">{
+                price, err := cs.ps.GetProductInitialPriceByProductCode(campaign.ProductCode)
+                if err != nil </span><span class="cov0" title="0">{
+                        return err
+                }</span>
+                <span class="cov0" title="0">err = cs.ps.UpdateProductPriceByProductCode(campaign.ProductCode, price.Price)
+                if err != nil </span><span class="cov0" title="0">{
+                        return err
+                }</span>
+        }
         <span class="cov0" title="0">return nil</span>
 }
 </pre>
@@ -219,7 +251,7 @@ type MockCampaignServiceIMockRecorder struct {
 }
 
 // NewMockCampaignServiceI creates a new mock instance.
-func NewMockCampaignServiceI(ctrl *gomock.Controller) *MockCampaignServiceI <span class="cov8" title="1">{
+func NewMockCampaignServiceI(ctrl *gomock.Controller) *MockCampaignServiceI <span class="cov0" title="0">{
         mock := &amp;MockCampaignServiceI{ctrl: ctrl}
         mock.recorder = &amp;MockCampaignServiceIMockRecorder{mock}
         return mock
@@ -420,6 +452,21 @@ func (mr *MockProductServiceIMockRecorder) GetProductByProductCode(arg0 interfac
         return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetProductByProductCode", reflect.TypeOf((*MockProductServiceI)(nil).GetProductByProductCode), arg0)
 }</span>
 
+// GetProductInitialPriceByProductCode mocks base method.
+func (m *MockProductServiceI) GetProductInitialPriceByProductCode(productCode string) (*models.ProductPrice, error) <span class="cov0" title="0">{
+        m.ctrl.T.Helper()
+        ret := m.ctrl.Call(m, "GetProductInitialPriceByProductCode", productCode)
+        ret0, _ := ret[0].(*models.ProductPrice)
+        ret1, _ := ret[1].(error)
+        return ret0, ret1
+}</span>
+
+// GetProductInitialPriceByProductCode indicates an expected call of GetProductInitialPriceByProductCode.
+func (mr *MockProductServiceIMockRecorder) GetProductInitialPriceByProductCode(productCode interface{}) *gomock.Call <span class="cov0" title="0">{
+        mr.mock.ctrl.T.Helper()
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetProductInitialPriceByProductCode", reflect.TypeOf((*MockProductServiceI)(nil).GetProductInitialPriceByProductCode), productCode)
+}</span>
+
 // GetProductPriceByProductCode mocks base method.
 func (m *MockProductServiceI) GetProductPriceByProductCode(productCode string) (*models.ProductPrice, error) <span class="cov8" title="1">{
         m.ctrl.T.Helper()
@@ -450,18 +497,18 @@ func (mr *MockProductServiceIMockRecorder) GetProductStockByProductName(productC
         return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetProductStockByProductName", reflect.TypeOf((*MockProductServiceI)(nil).GetProductStockByProductName), productCode)
 }</span>
 
-// Update mocks base method.
-func (m *MockProductServiceI) Update() error <span class="cov0" title="0">{
+// UpdateProductPriceByProductCode mocks base method.
+func (m *MockProductServiceI) UpdateProductPriceByProductCode(productCode string, newPrice float64) error <span class="cov0" title="0">{
         m.ctrl.T.Helper()
-        ret := m.ctrl.Call(m, "Update")
+        ret := m.ctrl.Call(m, "UpdateProductPriceByProductCode", productCode, newPrice)
         ret0, _ := ret[0].(error)
         return ret0
 }</span>
 
-// Update indicates an expected call of Update.
-func (mr *MockProductServiceIMockRecorder) Update() *gomock.Call <span class="cov0" title="0">{
+// UpdateProductPriceByProductCode indicates an expected call of UpdateProductPriceByProductCode.
+func (mr *MockProductServiceIMockRecorder) UpdateProductPriceByProductCode(productCode, newPrice interface{}) *gomock.Call <span class="cov0" title="0">{
         mr.mock.ctrl.T.Helper()
-        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockProductServiceI)(nil).Update))
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateProductPriceByProductCode", reflect.TypeOf((*MockProductServiceI)(nil).UpdateProductPriceByProductCode), productCode, newPrice)
 }</span>
 
 // UpdateProductStockByProductName mocks base method.
@@ -554,22 +601,21 @@ type ProductServiceI interface {
         CreateProduct(cp models.CreateProduct) error
         GetProductByProductCode(string) (*models.Product, error)
         GetProductPriceByProductCode(productCode string) (*models.ProductPrice, error)
+        GetProductInitialPriceByProductCode(productCode string) (*models.ProductPrice, error)
         GetProductStockByProductName(productCode string) (*models.ProductStock, error)
         UpdateProductStockByProductName(models.UpdateProductStock) error
-        Update() error
+        UpdateProductPriceByProductCode(productCode string, newPrice float64) error
 }
 
 type ProductService struct {
         t  faketime.TimeInterface
         pr repositories.ProductRepositoryI
-        cs CampaignServiceI
 }
 
-func NewProductService(t faketime.TimeInterface, pr repositories.ProductRepositoryI, cs CampaignServiceI) *ProductService <span class="cov8" title="1">{
+func NewProductService(t faketime.TimeInterface, pr repositories.ProductRepositoryI) *ProductService <span class="cov8" title="1">{
         return &amp;ProductService{
                 t:  t,
                 pr: pr,
-                cs: cs,
         }
 }</span>
 
@@ -597,6 +643,14 @@ func (p ProductService) GetProductPriceByProductCode(productCode string) (*model
         <span class="cov8" title="1">return &amp;productPrice, nil</span>
 }
 
+func (p ProductService) GetProductInitialPriceByProductCode(productCode string) (*models.ProductPrice, error) <span class="cov0" title="0">{
+        productPrice, err := p.pr.GetProductInitialPriceByProductCode(productCode)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+        <span class="cov0" title="0">return &amp;productPrice, nil</span>
+}
+
 func (p ProductService) GetProductStockByProductName(productCode string) (*models.ProductStock, error) <span class="cov8" title="1">{
         productStock, err := p.pr.GetProductStockByProductName(productCode)
         if err != nil </span><span class="cov8" title="1">{
@@ -613,39 +667,47 @@ func (p ProductService) UpdateProductStockByProductName(up models.UpdateProductS
         <span class="cov8" title="1">return nil</span>
 }
 
-func (p ProductService) Update() error <span class="cov0" title="0">{
-        campaigns, err := p.cs.GetAllActiveCampaigns()
+func (p ProductService) UpdateProductPriceByProductCode(productCode string, newPrice float64) error <span class="cov0" title="0">{
+        err := p.pr.UpdateProductPriceByProductCode(productCode, newPrice)
         if err != nil </span><span class="cov0" title="0">{
                 return err
         }</span>
-        <span class="cov0" title="0">for _, campaign := range campaigns </span><span class="cov0" title="0">{
-                price, err := p.pr.GetProductPriceByProductCode(campaign.ProductCode)
-                if err != nil </span><span class="cov0" title="0">{
-                        return err
-                }</span>
-                <span class="cov0" title="0">err = p.pr.UpdateProductPriceByProductCode(campaign.ProductCode, price.Price-float64(10))
-                if err != nil </span><span class="cov0" title="0">{
-                        return err
-                }</span>
-        }
-
-        <span class="cov0" title="0">campaigns, err = p.cs.GetAllEndedCampaigns()
-        if err != nil </span><span class="cov0" title="0">{
-                return err
-        }</span>
-        <span class="cov0" title="0">for _, campaign := range campaigns </span><span class="cov0" title="0">{
-                price, err := p.pr.GetProductPriceByProductCode(campaign.ProductCode)
-                if err != nil </span><span class="cov0" title="0">{
-                        return err
-                }</span>
-                <span class="cov0" title="0">err = p.pr.UpdateProductPriceByProductCode(campaign.ProductCode, price.Price)
-                if err != nil </span><span class="cov0" title="0">{
-                        return err
-                }</span>
-        }
-
         <span class="cov0" title="0">return nil</span>
 }
+
+// func (p ProductService) Update() error {
+//         campaigns, err := p.cs.GetAllActiveCampaigns()
+//         if err != nil {
+//                 return err
+//         }
+//         for _, campaign := range campaigns {
+//                 price, err := p.pr.GetProductPriceByProductCode(campaign.ProductCode)
+//                 if err != nil {
+//                         return err
+//                 }
+//                 err = p.pr.UpdateProductPriceByProductCode(campaign.ProductCode, price.Price-float64(10))
+//                 if err != nil {
+//                         return err
+//                 }
+//         }
+
+//         campaigns, err = p.cs.GetAllEndedCampaigns()
+//         if err != nil {
+//                 return err
+//         }
+//         for _, campaign := range campaigns {
+//                 price, err := p.pr.GetProductPriceByProductCode(campaign.ProductCode)
+//                 if err != nil {
+//                         return err
+//                 }
+//                 err = p.pr.UpdateProductPriceByProductCode(campaign.ProductCode, price.Price)
+//                 if err != nil {
+//                         return err
+//                 }
+//         }
+
+//         return nil
+// }
 </pre>
 		
 		<pre class="file" id="file6" style="display: none">// Code generated by MockGen. DO NOT EDIT.

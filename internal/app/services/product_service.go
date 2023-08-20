@@ -10,22 +10,21 @@ type ProductServiceI interface {
 	CreateProduct(cp models.CreateProduct) error
 	GetProductByProductCode(string) (*models.Product, error)
 	GetProductPriceByProductCode(productCode string) (*models.ProductPrice, error)
+	GetProductInitialPriceByProductCode(productCode string) (*models.ProductPrice, error)
 	GetProductStockByProductName(productCode string) (*models.ProductStock, error)
 	UpdateProductStockByProductName(models.UpdateProductStock) error
-	Update() error
+	UpdateProductPriceByProductCode(productCode string, newPrice float64) error
 }
 
 type ProductService struct {
 	t  faketime.TimeInterface
 	pr repositories.ProductRepositoryI
-	cs CampaignServiceI
 }
 
-func NewProductService(t faketime.TimeInterface, pr repositories.ProductRepositoryI, cs CampaignServiceI) *ProductService {
+func NewProductService(t faketime.TimeInterface, pr repositories.ProductRepositoryI) *ProductService {
 	return &ProductService{
 		t:  t,
 		pr: pr,
-		cs: cs,
 	}
 }
 
@@ -53,6 +52,14 @@ func (p ProductService) GetProductPriceByProductCode(productCode string) (*model
 	return &productPrice, nil
 }
 
+func (p ProductService) GetProductInitialPriceByProductCode(productCode string) (*models.ProductPrice, error) {
+	productPrice, err := p.pr.GetProductInitialPriceByProductCode(productCode)
+	if err != nil {
+		return nil, err
+	}
+	return &productPrice, nil
+}
+
 func (p ProductService) GetProductStockByProductName(productCode string) (*models.ProductStock, error) {
 	productStock, err := p.pr.GetProductStockByProductName(productCode)
 	if err != nil {
@@ -69,36 +76,44 @@ func (p ProductService) UpdateProductStockByProductName(up models.UpdateProductS
 	return nil
 }
 
-func (p ProductService) Update() error {
-	campaigns, err := p.cs.GetAllActiveCampaigns()
+func (p ProductService) UpdateProductPriceByProductCode(productCode string, newPrice float64) error {
+	err := p.pr.UpdateProductPriceByProductCode(productCode, newPrice)
 	if err != nil {
 		return err
 	}
-	for _, campaign := range campaigns {
-		price, err := p.pr.GetProductPriceByProductCode(campaign.ProductCode)
-		if err != nil {
-			return err
-		}
-		err = p.pr.UpdateProductPriceByProductCode(campaign.ProductCode, price.Price-float64(10))
-		if err != nil {
-			return err
-		}
-	}
-
-	campaigns, err = p.cs.GetAllEndedCampaigns()
-	if err != nil {
-		return err
-	}
-	for _, campaign := range campaigns {
-		price, err := p.pr.GetProductPriceByProductCode(campaign.ProductCode)
-		if err != nil {
-			return err
-		}
-		err = p.pr.UpdateProductPriceByProductCode(campaign.ProductCode, price.Price)
-		if err != nil {
-			return err
-		}
-	}
-
 	return nil
 }
+
+// func (p ProductService) Update() error {
+// 	campaigns, err := p.cs.GetAllActiveCampaigns()
+// 	if err != nil {
+// 		return err
+// 	}
+// 	for _, campaign := range campaigns {
+// 		price, err := p.pr.GetProductPriceByProductCode(campaign.ProductCode)
+// 		if err != nil {
+// 			return err
+// 		}
+// 		err = p.pr.UpdateProductPriceByProductCode(campaign.ProductCode, price.Price-float64(10))
+// 		if err != nil {
+// 			return err
+// 		}
+// 	}
+
+// 	campaigns, err = p.cs.GetAllEndedCampaigns()
+// 	if err != nil {
+// 		return err
+// 	}
+// 	for _, campaign := range campaigns {
+// 		price, err := p.pr.GetProductPriceByProductCode(campaign.ProductCode)
+// 		if err != nil {
+// 			return err
+// 		}
+// 		err = p.pr.UpdateProductPriceByProductCode(campaign.ProductCode, price.Price)
+// 		if err != nil {
+// 			return err
+// 		}
+// 	}
+
+// 	return nil
+// }

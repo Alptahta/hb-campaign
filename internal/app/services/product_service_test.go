@@ -48,8 +48,7 @@ func Test_CreateProduct(t *testing.T) {
 		mockCtrl.Finish()
 		mockRepository := repositories.NewMockProductRepositoryI(mockCtrl)
 		mockFakeTime := faketime.NewMockTimeInterface(mockCtrl)
-		mockCampaignService := NewMockCampaignServiceI(mockCtrl)
-		ps := NewProductService(mockFakeTime, mockRepository, mockCampaignService)
+		ps := NewProductService(mockFakeTime, mockRepository)
 
 		mockRepository.EXPECT().
 			CreateProduct(gomock.Any()).
@@ -67,8 +66,7 @@ func Test_CreateProduct(t *testing.T) {
 		mockCtrl.Finish()
 		mockRepository := repositories.NewMockProductRepositoryI(mockCtrl)
 		mockFakeTime := faketime.NewMockTimeInterface(mockCtrl)
-		mockCampaignService := NewMockCampaignServiceI(mockCtrl)
-		ps := NewProductService(mockFakeTime, mockRepository, mockCampaignService)
+		ps := NewProductService(mockFakeTime, mockRepository)
 
 		mockRepository.EXPECT().
 			CreateProduct(gomock.Any()).
@@ -88,8 +86,7 @@ func Test_GetProductByProductCode(t *testing.T) {
 		mockCtrl.Finish()
 		mockRepository := repositories.NewMockProductRepositoryI(mockCtrl)
 		mockFakeTime := faketime.NewMockTimeInterface(mockCtrl)
-		mockCampaignService := NewMockCampaignServiceI(mockCtrl)
-		ps := NewProductService(mockFakeTime, mockRepository, mockCampaignService)
+		ps := NewProductService(mockFakeTime, mockRepository)
 
 		mockRepository.EXPECT().
 			GetProductByProductCode(gomock.Any()).
@@ -110,8 +107,7 @@ func Test_GetProductByProductCode(t *testing.T) {
 		mockCtrl.Finish()
 		mockRepository := repositories.NewMockProductRepositoryI(mockCtrl)
 		mockFakeTime := faketime.NewMockTimeInterface(mockCtrl)
-		mockCampaignService := NewMockCampaignServiceI(mockCtrl)
-		ps := NewProductService(mockFakeTime, mockRepository, mockCampaignService)
+		ps := NewProductService(mockFakeTime, mockRepository)
 
 		mockRepository.EXPECT().
 			GetProductByProductCode(gomock.Any()).
@@ -134,8 +130,7 @@ func Test_GetProductPriceByProductCode(t *testing.T) {
 		mockCtrl.Finish()
 		mockRepository := repositories.NewMockProductRepositoryI(mockCtrl)
 		mockFakeTime := faketime.NewMockTimeInterface(mockCtrl)
-		mockCampaignService := NewMockCampaignServiceI(mockCtrl)
-		ps := NewProductService(mockFakeTime, mockRepository, mockCampaignService)
+		ps := NewProductService(mockFakeTime, mockRepository)
 
 		mockRepository.EXPECT().
 			GetProductPriceByProductCode(gomock.Any()).
@@ -156,8 +151,7 @@ func Test_GetProductPriceByProductCode(t *testing.T) {
 		mockCtrl.Finish()
 		mockRepository := repositories.NewMockProductRepositoryI(mockCtrl)
 		mockFakeTime := faketime.NewMockTimeInterface(mockCtrl)
-		mockCampaignService := NewMockCampaignServiceI(mockCtrl)
-		ps := NewProductService(mockFakeTime, mockRepository, mockCampaignService)
+		ps := NewProductService(mockFakeTime, mockRepository)
 
 		mockRepository.EXPECT().
 			GetProductPriceByProductCode(gomock.Any()).
@@ -180,8 +174,7 @@ func Test_GetProductStockByProductName(t *testing.T) {
 		mockCtrl.Finish()
 		mockRepository := repositories.NewMockProductRepositoryI(mockCtrl)
 		mockFakeTime := faketime.NewMockTimeInterface(mockCtrl)
-		mockCampaignService := NewMockCampaignServiceI(mockCtrl)
-		ps := NewProductService(mockFakeTime, mockRepository, mockCampaignService)
+		ps := NewProductService(mockFakeTime, mockRepository)
 
 		mockRepository.EXPECT().
 			GetProductStockByProductName(gomock.Any()).
@@ -202,8 +195,7 @@ func Test_GetProductStockByProductName(t *testing.T) {
 		mockCtrl.Finish()
 		mockRepository := repositories.NewMockProductRepositoryI(mockCtrl)
 		mockFakeTime := faketime.NewMockTimeInterface(mockCtrl)
-		mockCampaignService := NewMockCampaignServiceI(mockCtrl)
-		ps := NewProductService(mockFakeTime, mockRepository, mockCampaignService)
+		ps := NewProductService(mockFakeTime, mockRepository)
 
 		mockRepository.EXPECT().
 			GetProductStockByProductName(gomock.Any()).
@@ -226,8 +218,7 @@ func Test_UpdateProductStockByProductName(t *testing.T) {
 		mockCtrl.Finish()
 		mockRepository := repositories.NewMockProductRepositoryI(mockCtrl)
 		mockFakeTime := faketime.NewMockTimeInterface(mockCtrl)
-		mockCampaignService := NewMockCampaignServiceI(mockCtrl)
-		ps := NewProductService(mockFakeTime, mockRepository, mockCampaignService)
+		ps := NewProductService(mockFakeTime, mockRepository)
 
 		mockRepository.EXPECT().
 			UpdateProductStockByProductName(gomock.Any()).
@@ -245,8 +236,7 @@ func Test_UpdateProductStockByProductName(t *testing.T) {
 		mockCtrl.Finish()
 		mockRepository := repositories.NewMockProductRepositoryI(mockCtrl)
 		mockFakeTime := faketime.NewMockTimeInterface(mockCtrl)
-		mockCampaignService := NewMockCampaignServiceI(mockCtrl)
-		ps := NewProductService(mockFakeTime, mockRepository, mockCampaignService)
+		ps := NewProductService(mockFakeTime, mockRepository)
 
 		mockRepository.EXPECT().
 			UpdateProductStockByProductName(gomock.Any()).
