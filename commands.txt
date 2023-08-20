@@ -5,6 +5,7 @@ get_product_info P1
 increase_time 1
 get_product_info P1
 increase_time 1
+get_campaign_info C1
 get_product_info P1
 increase_time 1
 get_product_info P1
