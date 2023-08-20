@@ -1,3 +1,17 @@
+format:
+	go fmt ./... 
+
+mocks:
+	mockgen -source .\internal\app\repositories\product_repository.go  -destination .\internal\app\repositories\mock_product_repository.go -package repositories
+	mockgen -source .\internal\app\repositories\campaign_repository.go  -destination .\internal\app\repositories\mock_campaign_repository.go -package repositories
+	mockgen -source .\internal\app\repositories\order_repository.go  -destination .\internal\app\repositories\mock_order_repository.go -package repositories
+
+	mockgen -source .\internal\faketime\time-simulator.go  -destination .\internal\faketime\mock_time-simulator.go -package faketime
+
+	mockgen -source .\internal\app\services\product_service.go  -destination .\internal\app\services\mock_product_service.go -package services
+	mockgen -source .\internal\app\services\campaign_service.go  -destination .\internal\app\services\mock_campaign_service.go -package services
+	mockgen -source .\internal\app\services\order_service.go  -destination .\internal\app\services\mock_order_service.go -package services
+
 unit-tests:
 	go test -v ./...
 
@@ -14,3 +28,4 @@ purge:
 	docker stop mysqlCont
 	docker rm mysqlCont
 	docker image rm tempmysql:trial
+
