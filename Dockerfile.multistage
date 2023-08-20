@@ -22,7 +22,7 @@ FROM gcr.io/distroless/base-debian11 AS build-release-stage
 WORKDIR /
 
 COPY --from=build-stage /hb /hb
-#COPY --from=build-stage ./commands.txt ./commands.txt
+COPY --from=build-stage /app/commands.txt /commands.txt
 
 EXPOSE 8080
 
