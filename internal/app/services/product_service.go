@@ -12,17 +12,20 @@ type ProductServiceI interface {
 	GetProductPriceByProductCode(productCode string) (*models.ProductPrice, error)
 	GetProductStockByProductName(productCode string) (*models.ProductStock, error)
 	UpdateProductStockByProductName(models.UpdateProductStock) error
+	Update() error
 }
 
 type ProductService struct {
 	t  faketime.TimeInterface
 	pr repositories.ProductRepositoryI
+	cs CampaignServiceI
 }
 
-func NewProductService(t faketime.TimeInterface, pr repositories.ProductRepositoryI) *ProductService {
+func NewProductService(t faketime.TimeInterface, pr repositories.ProductRepositoryI, cs CampaignServiceI) *ProductService {
 	return &ProductService{
 		t:  t,
 		pr: pr,
+		cs: cs,
 	}
 }
 
@@ -63,5 +66,39 @@ func (p ProductService) UpdateProductStockByProductName(up models.UpdateProductS
 	if err != nil {
 		return err
 	}
+	return nil
+}
+
+func (p ProductService) Update() error {
+	campaigns, err := p.cs.GetAllActiveCampaigns()
+	if err != nil {
+		return err
+	}
+	for _, campaign := range campaigns {
+		price, err := p.pr.GetProductPriceByProductCode(campaign.ProductCode)
+		if err != nil {
+			return err
+		}
+		err = p.pr.UpdateProductPriceByProductCode(campaign.ProductCode, price.Price-float64(10))
+		if err != nil {
+			return err
+		}
+	}
+
+	campaigns, err = p.cs.GetAllEndedCampaigns()
+	if err != nil {
+		return err
+	}
+	for _, campaign := range campaigns {
+		price, err := p.pr.GetProductPriceByProductCode(campaign.ProductCode)
+		if err != nil {
+			return err
+		}
+		err = p.pr.UpdateProductPriceByProductCode(campaign.ProductCode, price.Price)
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }

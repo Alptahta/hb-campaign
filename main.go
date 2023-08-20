@@ -48,11 +48,12 @@ func main() {
 	cr := repositories.NewCampaignRepository(db)
 	or := repositories.NewOrderRepository(db)
 
-	ps := services.NewProductService(&ft, pr)
 	cs := services.NewCampaignService(&ft, cr)
+	ps := services.NewProductService(&ft, pr, cs)
 	os := services.NewOrderService(&ft, ps, or)
 
 	ft.Register(cs)
+	ft.Register(ps)
 
 	// Handmade Multiplexer
 	for _, v1 := range fileLines {

@@ -48,6 +48,36 @@ func (mr *MockCampaignServiceIMockRecorder) CreateCampaign(cp interface{}) *gomo
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateCampaign", reflect.TypeOf((*MockCampaignServiceI)(nil).CreateCampaign), cp)
 }
 
+// GetAllActiveCampaigns mocks base method.
+func (m *MockCampaignServiceI) GetAllActiveCampaigns() ([]models.Campaign, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAllActiveCampaigns")
+	ret0, _ := ret[0].([]models.Campaign)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAllActiveCampaigns indicates an expected call of GetAllActiveCampaigns.
+func (mr *MockCampaignServiceIMockRecorder) GetAllActiveCampaigns() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllActiveCampaigns", reflect.TypeOf((*MockCampaignServiceI)(nil).GetAllActiveCampaigns))
+}
+
+// GetAllEndedCampaigns mocks base method.
+func (m *MockCampaignServiceI) GetAllEndedCampaigns() ([]models.Campaign, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAllEndedCampaigns")
+	ret0, _ := ret[0].([]models.Campaign)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAllEndedCampaigns indicates an expected call of GetAllEndedCampaigns.
+func (mr *MockCampaignServiceIMockRecorder) GetAllEndedCampaigns() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllEndedCampaigns", reflect.TypeOf((*MockCampaignServiceI)(nil).GetAllEndedCampaigns))
+}
+
 // GetCampaignByName mocks base method.
 func (m *MockCampaignServiceI) GetCampaignByName(CampaignCode string) (*models.Campaign, error) {
 	m.ctrl.T.Helper()

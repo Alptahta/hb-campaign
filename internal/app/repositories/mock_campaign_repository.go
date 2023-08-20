@@ -49,6 +49,21 @@ func (mr *MockCampaignRepositoryIMockRecorder) CreateCampaign(cc interface{}) *g
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateCampaign", reflect.TypeOf((*MockCampaignRepositoryI)(nil).CreateCampaign), cc)
 }
 
+// GetAllActiveCampaigns mocks base method.
+func (m *MockCampaignRepositoryI) GetAllActiveCampaigns() ([]models.Campaign, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAllActiveCampaigns")
+	ret0, _ := ret[0].([]models.Campaign)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAllActiveCampaigns indicates an expected call of GetAllActiveCampaigns.
+func (mr *MockCampaignRepositoryIMockRecorder) GetAllActiveCampaigns() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllActiveCampaigns", reflect.TypeOf((*MockCampaignRepositoryI)(nil).GetAllActiveCampaigns))
+}
+
 // GetAllCampaignsWithFinishTimes mocks base method.
 func (m *MockCampaignRepositoryI) GetAllCampaignsWithFinishTimes() ([]models.CampaignWithFinishTime, error) {
 	m.ctrl.T.Helper()
@@ -62,6 +77,21 @@ func (m *MockCampaignRepositoryI) GetAllCampaignsWithFinishTimes() ([]models.Cam
 func (mr *MockCampaignRepositoryIMockRecorder) GetAllCampaignsWithFinishTimes() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllCampaignsWithFinishTimes", reflect.TypeOf((*MockCampaignRepositoryI)(nil).GetAllCampaignsWithFinishTimes))
+}
+
+// GetAllEndedCampaigns mocks base method.
+func (m *MockCampaignRepositoryI) GetAllEndedCampaigns() ([]models.Campaign, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAllEndedCampaigns")
+	ret0, _ := ret[0].([]models.Campaign)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAllEndedCampaigns indicates an expected call of GetAllEndedCampaigns.
+func (mr *MockCampaignRepositoryIMockRecorder) GetAllEndedCampaigns() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllEndedCampaigns", reflect.TypeOf((*MockCampaignRepositoryI)(nil).GetAllEndedCampaigns))
 }
 
 // GetCampaignByName mocks base method.

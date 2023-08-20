@@ -64,6 +64,21 @@ func (mr *MockProductRepositoryIMockRecorder) GetProductByProductCode(productCod
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetProductByProductCode", reflect.TypeOf((*MockProductRepositoryI)(nil).GetProductByProductCode), productCode)
 }
 
+// GetProductInitialPriceByProductCode mocks base method.
+func (m *MockProductRepositoryI) GetProductInitialPriceByProductCode(productCode string) (models.ProductPrice, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetProductInitialPriceByProductCode", productCode)
+	ret0, _ := ret[0].(models.ProductPrice)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetProductInitialPriceByProductCode indicates an expected call of GetProductInitialPriceByProductCode.
+func (mr *MockProductRepositoryIMockRecorder) GetProductInitialPriceByProductCode(productCode interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetProductInitialPriceByProductCode", reflect.TypeOf((*MockProductRepositoryI)(nil).GetProductInitialPriceByProductCode), productCode)
+}
+
 // GetProductPriceByProductCode mocks base method.
 func (m *MockProductRepositoryI) GetProductPriceByProductCode(productCode string) (models.ProductPrice, error) {
 	m.ctrl.T.Helper()
@@ -92,6 +107,20 @@ func (m *MockProductRepositoryI) GetProductStockByProductName(productCode string
 func (mr *MockProductRepositoryIMockRecorder) GetProductStockByProductName(productCode interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetProductStockByProductName", reflect.TypeOf((*MockProductRepositoryI)(nil).GetProductStockByProductName), productCode)
+}
+
+// UpdateProductPriceByProductCode mocks base method.
+func (m *MockProductRepositoryI) UpdateProductPriceByProductCode(productCode string, newPrice float64) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateProductPriceByProductCode", productCode, newPrice)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdateProductPriceByProductCode indicates an expected call of UpdateProductPriceByProductCode.
+func (mr *MockProductRepositoryIMockRecorder) UpdateProductPriceByProductCode(productCode, newPrice interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateProductPriceByProductCode", reflect.TypeOf((*MockProductRepositoryI)(nil).UpdateProductPriceByProductCode), productCode, newPrice)
 }
 
 // UpdateProductStockByProductName mocks base method.

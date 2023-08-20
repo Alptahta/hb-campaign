@@ -11,6 +11,8 @@ type CampaignRepositoryI interface {
 	GetCampaignByName(campaignCode string) (models.Campaign, error)
 	GetAllCampaignsWithFinishTimes() ([]models.CampaignWithFinishTime, error)
 	UpdateStatusByCampaignName(campaignName, status string) error
+	GetAllActiveCampaigns() ([]models.Campaign, error)
+	GetAllEndedCampaigns() ([]models.Campaign, error)
 }
 
 type CampaignRepository struct {
@@ -65,7 +67,7 @@ func (pr *CampaignRepository) GetAllCampaignsWithFinishTimes() ([]models.Campaig
 		campaigns = append(campaigns, campaign)
 	}
 	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("campaignsByArtist %v", err)
+		return nil, fmt.Errorf("campaigns %v", err)
 	}
 	return campaigns, nil
 }
@@ -82,4 +84,48 @@ func (pr *CampaignRepository) UpdateStatusByCampaignName(campaignName, status st
 	}
 
 	return nil
+}
+
+func (pr *CampaignRepository) GetAllActiveCampaigns() ([]models.Campaign, error) {
+	var campaigns []models.Campaign
+
+	rows, err := pr.db.Query("SELECT * FROM campaigns WHERE status='Active'")
+	if err != nil {
+		return nil, fmt.Errorf("all campaigns %v", err)
+	}
+	defer rows.Close()
+	// Loop through rows, using Scan to assign column data to struct fields.
+	for rows.Next() {
+		var campaign models.Campaign
+		if err := rows.Scan(&campaign.ID, &campaign.Name, &campaign.ProductCode, &campaign.Duration, &campaign.Name, &campaign.TargetSalesCount, &campaign.StartedAt, &campaign.FinishedAt, &campaign.Status); err != nil {
+			return nil, fmt.Errorf("all campaigns %v", err)
+		}
+		campaigns = append(campaigns, campaign)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("campaigns %v", err)
+	}
+	return campaigns, nil
+}
+
+func (pr *CampaignRepository) GetAllEndedCampaigns() ([]models.Campaign, error) {
+	var campaigns []models.Campaign
+
+	rows, err := pr.db.Query("SELECT * FROM campaigns WHERE status='Ended'")
+	if err != nil {
+		return nil, fmt.Errorf("all campaigns %v", err)
+	}
+	defer rows.Close()
+	// Loop through rows, using Scan to assign column data to struct fields.
+	for rows.Next() {
+		var campaign models.Campaign
+		if err := rows.Scan(&campaign.ID, &campaign.Name, &campaign.ProductCode, &campaign.Duration, &campaign.Name, &campaign.TargetSalesCount, &campaign.StartedAt, &campaign.FinishedAt, &campaign.Status); err != nil {
+			return nil, fmt.Errorf("all campaigns %v", err)
+		}
+		campaigns = append(campaigns, campaign)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("campaigns %v", err)
+	}
+	return campaigns, nil
 }

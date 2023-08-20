@@ -55,21 +55,21 @@
 			<div id="nav">
 				<select id="files">
 				
-				<option value="file0">hb-campaign/internal/app/services/campaign_service.go (100.0%)</option>
+				<option value="file0">hb-campaign/internal/app/services/campaign_service.go (34.1%)</option>
 				
-				<option value="file1">hb-campaign/internal/app/services/mock_campaign_service.go (0.0%)</option>
+				<option value="file1">hb-campaign/internal/app/services/mock_campaign_service.go (8.1%)</option>
 				
 				<option value="file2">hb-campaign/internal/app/services/mock_order_service.go (0.0%)</option>
 				
-				<option value="file3">hb-campaign/internal/app/services/mock_product_service.go (64.9%)</option>
+				<option value="file3">hb-campaign/internal/app/services/mock_product_service.go (55.8%)</option>
 				
 				<option value="file4">hb-campaign/internal/app/services/order_service.go (100.0%)</option>
 				
-				<option value="file5">hb-campaign/internal/app/services/product_service.go (100.0%)</option>
+				<option value="file5">hb-campaign/internal/app/services/product_service.go (50.0%)</option>
 				
 				<option value="file6">hb-campaign/internal/faketime/mock_time-simulator.go (0.0%)</option>
 				
-				<option value="file7">hb-campaign/internal/faketime/time-simulator.go (100.0%)</option>
+				<option value="file7">hb-campaign/internal/faketime/time-simulator.go (71.4%)</option>
 				
 				</select>
 			</div>
@@ -89,11 +89,16 @@ import (
         "hb-campaign/internal/app/models"
         "hb-campaign/internal/app/repositories"
         "hb-campaign/internal/faketime"
+        "strconv"
+        "strings"
 )
 
 type CampaignServiceI interface {
-        CreateCampaign(cp models.CreateCampaign) error
+        CreateCampaign(cp models.CreateCampaignRequest) error
         GetCampaignByName(CampaignCode string) (*models.Campaign, error)
+        GetAllActiveCampaigns() ([]models.Campaign, error)
+        GetAllEndedCampaigns() ([]models.Campaign, error)
+        Update() error
 }
 
 type CampaignService struct {
@@ -108,8 +113,26 @@ func NewCampaignService(t faketime.TimeInterface, cr repositories.CampaignReposi
         }
 }</span>
 
-func (cs CampaignService) CreateCampaign(cp models.CreateCampaign) error <span class="cov8" title="1">{
-        _, err := cs.cr.CreateCampaign(cp)
+func (cs CampaignService) CreateCampaign(cp models.CreateCampaignRequest) error <span class="cov8" title="1">{
+        time := cs.t.GetTime()
+        ss := strings.Split(time, ":")
+        hour, err := strconv.Atoi(ss[0])
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov8" title="1">campaignDTO := models.CreateCampaignDTO{
+                Name:                   cp.Name,
+                ProductCode:            cp.ProductCode,
+                Duration:               cp.Duration,
+                PriceManipulationLimit: cp.PriceManipulationLimit,
+                TargetSalesCount:       cp.TargetSalesCount,
+                StartedAt:              time,
+                FinishedAt:             strconv.Itoa(hour + cp.Duration),
+                Status:                 "Active",
+        }
+
+        _, err = cs.cr.CreateCampaign(campaignDTO)
         if err != nil </span><span class="cov8" title="1">{
                 return err
         }</span>
@@ -122,6 +145,52 @@ func (cs CampaignService) GetCampaignByName(CampaignCode string) (*models.Campai
                 return nil, err
         }</span>
         <span class="cov8" title="1">return &amp;Campaign, nil</span>
+}
+
+func (cs CampaignService) GetAllActiveCampaigns() ([]models.Campaign, error) <span class="cov0" title="0">{
+        campaigns, err := cs.cr.GetAllActiveCampaigns()
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+        <span class="cov0" title="0">return campaigns, nil</span>
+}
+
+func (cs CampaignService) GetAllEndedCampaigns() ([]models.Campaign, error) <span class="cov0" title="0">{
+        campaigns, err := cs.cr.GetAllEndedCampaigns()
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+        <span class="cov0" title="0">return campaigns, nil</span>
+}
+
+func (cs CampaignService) Update() error <span class="cov0" title="0">{
+        time := cs.t.GetTime()
+        ss := strings.Split(time, ":")
+        currentHour, err := strconv.Atoi(ss[0])
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov0" title="0">campaigns, err := cs.cr.GetAllCampaignsWithFinishTimes()
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov0" title="0">for _, campaign := range campaigns </span><span class="cov0" title="0">{
+                ss := strings.Split(campaign.FinishedAt, ":")
+                campaignFinishTime, err := strconv.Atoi(ss[0])
+                if err != nil </span><span class="cov0" title="0">{
+                        return err
+                }</span>
+
+                <span class="cov0" title="0">if currentHour &gt; campaignFinishTime </span><span class="cov0" title="0">{
+                        err = cs.cr.UpdateStatusByCampaignName(campaign.Name, "Ended")
+                        if err != nil </span><span class="cov0" title="0">{
+                                return err
+                        }</span>
+                }
+        }
+        <span class="cov0" title="0">return nil</span>
 }
 </pre>
 		
@@ -150,7 +219,7 @@ type MockCampaignServiceIMockRecorder struct {
 }
 
 // NewMockCampaignServiceI creates a new mock instance.
-func NewMockCampaignServiceI(ctrl *gomock.Controller) *MockCampaignServiceI <span class="cov0" title="0">{
+func NewMockCampaignServiceI(ctrl *gomock.Controller) *MockCampaignServiceI <span class="cov8" title="1">{
         mock := &amp;MockCampaignServiceI{ctrl: ctrl}
         mock.recorder = &amp;MockCampaignServiceIMockRecorder{mock}
         return mock
@@ -162,7 +231,7 @@ func (m *MockCampaignServiceI) EXPECT() *MockCampaignServiceIMockRecorder <span 
 }</span>
 
 // CreateCampaign mocks base method.
-func (m *MockCampaignServiceI) CreateCampaign(cp models.CreateCampaign) error <span class="cov0" title="0">{
+func (m *MockCampaignServiceI) CreateCampaign(cp models.CreateCampaignRequest) error <span class="cov0" title="0">{
         m.ctrl.T.Helper()
         ret := m.ctrl.Call(m, "CreateCampaign", cp)
         ret0, _ := ret[0].(error)
@@ -173,6 +242,36 @@ func (m *MockCampaignServiceI) CreateCampaign(cp models.CreateCampaign) error <s
 func (mr *MockCampaignServiceIMockRecorder) CreateCampaign(cp interface{}) *gomock.Call <span class="cov0" title="0">{
         mr.mock.ctrl.T.Helper()
         return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateCampaign", reflect.TypeOf((*MockCampaignServiceI)(nil).CreateCampaign), cp)
+}</span>
+
+// GetAllActiveCampaigns mocks base method.
+func (m *MockCampaignServiceI) GetAllActiveCampaigns() ([]models.Campaign, error) <span class="cov0" title="0">{
+        m.ctrl.T.Helper()
+        ret := m.ctrl.Call(m, "GetAllActiveCampaigns")
+        ret0, _ := ret[0].([]models.Campaign)
+        ret1, _ := ret[1].(error)
+        return ret0, ret1
+}</span>
+
+// GetAllActiveCampaigns indicates an expected call of GetAllActiveCampaigns.
+func (mr *MockCampaignServiceIMockRecorder) GetAllActiveCampaigns() *gomock.Call <span class="cov0" title="0">{
+        mr.mock.ctrl.T.Helper()
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllActiveCampaigns", reflect.TypeOf((*MockCampaignServiceI)(nil).GetAllActiveCampaigns))
+}</span>
+
+// GetAllEndedCampaigns mocks base method.
+func (m *MockCampaignServiceI) GetAllEndedCampaigns() ([]models.Campaign, error) <span class="cov0" title="0">{
+        m.ctrl.T.Helper()
+        ret := m.ctrl.Call(m, "GetAllEndedCampaigns")
+        ret0, _ := ret[0].([]models.Campaign)
+        ret1, _ := ret[1].(error)
+        return ret0, ret1
+}</span>
+
+// GetAllEndedCampaigns indicates an expected call of GetAllEndedCampaigns.
+func (mr *MockCampaignServiceIMockRecorder) GetAllEndedCampaigns() *gomock.Call <span class="cov0" title="0">{
+        mr.mock.ctrl.T.Helper()
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllEndedCampaigns", reflect.TypeOf((*MockCampaignServiceI)(nil).GetAllEndedCampaigns))
 }</span>
 
 // GetCampaignByName mocks base method.
@@ -188,6 +287,20 @@ func (m *MockCampaignServiceI) GetCampaignByName(CampaignCode string) (*models.C
 func (mr *MockCampaignServiceIMockRecorder) GetCampaignByName(CampaignCode interface{}) *gomock.Call <span class="cov0" title="0">{
         mr.mock.ctrl.T.Helper()
         return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCampaignByName", reflect.TypeOf((*MockCampaignServiceI)(nil).GetCampaignByName), CampaignCode)
+}</span>
+
+// Update mocks base method.
+func (m *MockCampaignServiceI) Update() error <span class="cov0" title="0">{
+        m.ctrl.T.Helper()
+        ret := m.ctrl.Call(m, "Update")
+        ret0, _ := ret[0].(error)
+        return ret0
+}</span>
+
+// Update indicates an expected call of Update.
+func (mr *MockCampaignServiceIMockRecorder) Update() *gomock.Call <span class="cov0" title="0">{
+        mr.mock.ctrl.T.Helper()
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockCampaignServiceI)(nil).Update))
 }</span>
 </pre>
 		
@@ -337,6 +450,20 @@ func (mr *MockProductServiceIMockRecorder) GetProductStockByProductName(productC
         return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetProductStockByProductName", reflect.TypeOf((*MockProductServiceI)(nil).GetProductStockByProductName), productCode)
 }</span>
 
+// Update mocks base method.
+func (m *MockProductServiceI) Update() error <span class="cov0" title="0">{
+        m.ctrl.T.Helper()
+        ret := m.ctrl.Call(m, "Update")
+        ret0, _ := ret[0].(error)
+        return ret0
+}</span>
+
+// Update indicates an expected call of Update.
+func (mr *MockProductServiceIMockRecorder) Update() *gomock.Call <span class="cov0" title="0">{
+        mr.mock.ctrl.T.Helper()
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockProductServiceI)(nil).Update))
+}</span>
+
 // UpdateProductStockByProductName mocks base method.
 func (m *MockProductServiceI) UpdateProductStockByProductName(arg0 models.UpdateProductStock) error <span class="cov8" title="1">{
         m.ctrl.T.Helper()
@@ -429,17 +556,20 @@ type ProductServiceI interface {
         GetProductPriceByProductCode(productCode string) (*models.ProductPrice, error)
         GetProductStockByProductName(productCode string) (*models.ProductStock, error)
         UpdateProductStockByProductName(models.UpdateProductStock) error
+        Update() error
 }
 
 type ProductService struct {
         t  faketime.TimeInterface
         pr repositories.ProductRepositoryI
+        cs CampaignServiceI
 }
 
-func NewProductService(t faketime.TimeInterface, pr repositories.ProductRepositoryI) *ProductService <span class="cov8" title="1">{
+func NewProductService(t faketime.TimeInterface, pr repositories.ProductRepositoryI, cs CampaignServiceI) *ProductService <span class="cov8" title="1">{
         return &amp;ProductService{
                 t:  t,
                 pr: pr,
+                cs: cs,
         }
 }</span>
 
@@ -481,6 +611,40 @@ func (p ProductService) UpdateProductStockByProductName(up models.UpdateProductS
                 return err
         }</span>
         <span class="cov8" title="1">return nil</span>
+}
+
+func (p ProductService) Update() error <span class="cov0" title="0">{
+        campaigns, err := p.cs.GetAllActiveCampaigns()
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov0" title="0">for _, campaign := range campaigns </span><span class="cov0" title="0">{
+                price, err := p.pr.GetProductPriceByProductCode(campaign.ProductCode)
+                if err != nil </span><span class="cov0" title="0">{
+                        return err
+                }</span>
+                <span class="cov0" title="0">err = p.pr.UpdateProductPriceByProductCode(campaign.ProductCode, price.Price-float64(10))
+                if err != nil </span><span class="cov0" title="0">{
+                        return err
+                }</span>
+        }
+
+        <span class="cov0" title="0">campaigns, err = p.cs.GetAllEndedCampaigns()
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov0" title="0">for _, campaign := range campaigns </span><span class="cov0" title="0">{
+                price, err := p.pr.GetProductPriceByProductCode(campaign.ProductCode)
+                if err != nil </span><span class="cov0" title="0">{
+                        return err
+                }</span>
+                <span class="cov0" title="0">err = p.pr.UpdateProductPriceByProductCode(campaign.ProductCode, price.Price)
+                if err != nil </span><span class="cov0" title="0">{
+                        return err
+                }</span>
+        }
+
+        <span class="cov0" title="0">return nil</span>
 }
 </pre>
 		
@@ -544,6 +708,30 @@ func (mr *MockTimeInterfaceMockRecorder) IncreaseTime(arg0 interface{}) *gomock.
         mr.mock.ctrl.T.Helper()
         return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IncreaseTime", reflect.TypeOf((*MockTimeInterface)(nil).IncreaseTime), arg0)
 }</span>
+
+// NotifyAll mocks base method.
+func (m *MockTimeInterface) NotifyAll() <span class="cov0" title="0">{
+        m.ctrl.T.Helper()
+        m.ctrl.Call(m, "NotifyAll")
+}</span>
+
+// NotifyAll indicates an expected call of NotifyAll.
+func (mr *MockTimeInterfaceMockRecorder) NotifyAll() *gomock.Call <span class="cov0" title="0">{
+        mr.mock.ctrl.T.Helper()
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "NotifyAll", reflect.TypeOf((*MockTimeInterface)(nil).NotifyAll))
+}</span>
+
+// Register mocks base method.
+func (m *MockTimeInterface) Register(o Observer) <span class="cov0" title="0">{
+        m.ctrl.T.Helper()
+        m.ctrl.Call(m, "Register", o)
+}</span>
+
+// Register indicates an expected call of Register.
+func (mr *MockTimeInterfaceMockRecorder) Register(o interface{}) *gomock.Call <span class="cov0" title="0">{
+        mr.mock.ctrl.T.Helper()
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Register", reflect.TypeOf((*MockTimeInterface)(nil).Register), o)
+}</span>
 </pre>
 		
 		<pre class="file" id="file7" style="display: none">package faketime
@@ -553,11 +741,14 @@ import "fmt"
 type TimeInterface interface {
         GetTime() string
         IncreaseTime(int)
+        NotifyAll()
+        Register(o Observer)
 }
 
 type Time struct {
-        Hour   int
-        Minute int
+        Hour         int
+        Minute       int
+        observerList []Observer
 }
 
 func NewTime() Time <span class="cov8" title="1">{
@@ -570,7 +761,18 @@ func (t *Time) GetTime() string <span class="cov8" title="1">{
 
 func (t *Time) IncreaseTime(h int) <span class="cov8" title="1">{
         t.Hour = t.Hour + h
+        t.NotifyAll()
 }</span>
+
+func (t *Time) Register(o Observer) <span class="cov0" title="0">{
+        t.observerList = append(t.observerList, o)
+}</span>
+
+func (t *Time) NotifyAll() <span class="cov8" title="1">{
+        for _, observer := range t.observerList </span><span class="cov0" title="0">{
+                observer.Update()
+        }</span>
+}
 </pre>
 		
 		</div>

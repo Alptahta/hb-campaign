@@ -1,7 +1,6 @@
 package services
 
 import (
-	"fmt"
 	"hb-campaign/internal/app/models"
 	"hb-campaign/internal/app/repositories"
 	"hb-campaign/internal/faketime"
@@ -12,6 +11,8 @@ import (
 type CampaignServiceI interface {
 	CreateCampaign(cp models.CreateCampaignRequest) error
 	GetCampaignByName(CampaignCode string) (*models.Campaign, error)
+	GetAllActiveCampaigns() ([]models.Campaign, error)
+	GetAllEndedCampaigns() ([]models.Campaign, error)
 	Update() error
 }
 
@@ -61,8 +62,23 @@ func (cs CampaignService) GetCampaignByName(CampaignCode string) (*models.Campai
 	return &Campaign, nil
 }
 
+func (cs CampaignService) GetAllActiveCampaigns() ([]models.Campaign, error) {
+	campaigns, err := cs.cr.GetAllActiveCampaigns()
+	if err != nil {
+		return nil, err
+	}
+	return campaigns, nil
+}
+
+func (cs CampaignService) GetAllEndedCampaigns() ([]models.Campaign, error) {
+	campaigns, err := cs.cr.GetAllEndedCampaigns()
+	if err != nil {
+		return nil, err
+	}
+	return campaigns, nil
+}
+
 func (cs CampaignService) Update() error {
-	fmt.Println("AAAAAAAAAAAAAAA")
 	time := cs.t.GetTime()
 	ss := strings.Split(time, ":")
 	currentHour, err := strconv.Atoi(ss[0])

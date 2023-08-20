@@ -2,6 +2,7 @@ CREATE TABLE products (
     id int AUTO_INCREMENT,
     product_code varchar(10) NOT NULL,
     price FLOAT(5) NOT NULL,
+    initial_price FLOAT(5) NOT NULL,
     stock int NOT NULL,
     PRIMARY KEY (id),
     UNIQUE (product_code)

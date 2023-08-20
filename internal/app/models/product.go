@@ -1,10 +1,11 @@
 package models
 
 type Product struct {
-	ID          int64
-	ProductCode string
-	Price       float64
-	Stock       int
+	ID           int64
+	ProductCode  string
+	Price        float64
+	Stock        int
+	InitialPrice float64
 }
 
 type CreateProduct struct {
