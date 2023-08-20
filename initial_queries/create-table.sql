@@ -23,6 +23,9 @@ CREATE TABLE campaigns (
     duration int NOT NULL,
     price_manipulation_limit int NOT NULL,
     target_sales_count int NOT NULL,
+    started_at varchar(10) NOT NULL,
+    finished_at varchar(10) NOT NULL,
+    status varchar(10) NOT NULL,
     PRIMARY KEY (id),
     UNIQUE (name),
     FOREIGN KEY (product_code) REFERENCES products(product_code)
